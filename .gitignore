@@ -2,11 +2,14 @@
 
 # dependencies
 node_modules/
+Serverless/
 
 # Expo
 .expo/
 dist/
 web-build/
+
+# Expo Router
 
 # Native
 *.orig.*

@@ -15,16 +15,35 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.omarsawy.AIHealthApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermissions": "Allow Voice to Text",
+          "speechRecognitionPermissions": "Allow Voice to Text"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "43da5388-e32e-4ac7-bb49-4eb70d7fce99"
+      }
     }
   }
 }
