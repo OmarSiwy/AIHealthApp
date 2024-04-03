@@ -53,16 +53,4 @@ To get started with AIHealthApp, follow these simple steps:
     npx expo start --dev-client
     ```
 
-## Contributing
-
-We welcome contributions from the community! If you'd like to improve AIHealthApp, feel free to fork the repository, make your changes, and create a pull request.
-
-## License
-
-AIHealthApp is released under the [MIT License](LICENSE).
-
-## Acknowledgements
-
-A special thank you to all the AI services and technologies that made this app possible, particularly Microsoft AI, Supabase, React Native, Expo, and Python.
-
 For more information, questions, or feedback, please contact us through our GitHub repository.
