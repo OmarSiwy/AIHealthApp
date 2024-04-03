@@ -8,6 +8,13 @@ const AzureUrl = "https://healthbottalk.azurewebsites.net/api/sendrequest";
 
 export const PostRequests = async (req: string): Promise<string> => {
   try {
+    const user = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error('User not authenticated');
+      return "User not authenticated";
+    }
+
     const session = await supabase.auth.getSession();
     const token = session.data?.session?.access_token;
 

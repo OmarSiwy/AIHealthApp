@@ -56,5 +56,6 @@ const ChatBarStyles = StyleSheet.create({
   buttonText: {
     color: '#282a36',
     fontWeight: 'bold',
+    fontFamily: 'Georgia',
   },
 });

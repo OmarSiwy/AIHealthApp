@@ -13,9 +13,14 @@ import { CheckVisit, handleVisit } from '@/Helper/VisitHandler';
 
 // Private Variables
 const Images = [
-  require('../../assets/InfoPage.png'),
-  require('../../assets/InfoPage.png'),
-  require('../../assets/InfoPage.png'),
+  require('../../assets/ChatExample.png'),
+  require('../../assets/ChatExample2.png'),
+  require('../../assets/VoiceExample.png'),
+];
+const ImageTexts = [
+  "As seen above, this is the chatbox that you write into",
+  "The AI Responds with a message, where you are allowed to ask more questions",
+  "You can even respond with voice commands if you click the headphones"
 ];
 // End of Private Variables
 
@@ -30,13 +35,13 @@ export const Info: React.FC<{}> = (): React.JSX.Element => {
 
   // Run Only once when navigated to 
   React.useEffect(() => {
-    CheckVisit("InfoVisited").then((visited) => {
+    /*CheckVisit("InfoVisited").then((visited) => {
       if (visited) {
         navigation.navigate("Terms");
       }
     }).catch(() => {
       console.error("Error Checking Visit");
-    });
+    });*/
   }, []);
 
   // Run Whenever Index Changes
@@ -59,12 +64,13 @@ export const Info: React.FC<{}> = (): React.JSX.Element => {
 
   // Handles When Next is Pressed
   const handleNextPress = () => {
-    setNextIndex((nextIndex + 1));
+    console.log(activeIndex);
     setActiveIndex(nextIndex);
+    setNextIndex((nextIndex + 1));
 
     if (activeIndex === Images.length - 1) {
       handleVisit("InfoVisited");
-      navigation.navigate("Chat");
+      navigation.navigate("Terms");
     }
   };
 
@@ -73,18 +79,14 @@ export const Info: React.FC<{}> = (): React.JSX.Element => {
       {/* Image */}
       <View style={InfoStyles.imageContainer}>
         <Animated.View style={{ ...InfoStyles.fullSize, transform: [{ translateX: currentSlideAnim }] }}>
-          <Image style={InfoStyles.fullSize} source={Images[activeIndex]} />
+          <Image style={InfoStyles.image} source={Images[activeIndex]} />
         </Animated.View>
 
-        <Animated.View style={{ ...InfoStyles.fullSize, position: 'absolute', transform: [{ translateX: nextSlideAnim }] }}>
-          <Image style={InfoStyles.fullSize} source={nextIndex < Images.length ? Images[nextIndex] : null} />
+        <Animated.View style={{ ...InfoStyles.fullSize, transform: [{ translateX: nextSlideAnim }] }}>
+          <Image style={InfoStyles.image} source={nextIndex < Images.length ? Images[activeIndex] : null} />
         </Animated.View>
       </View>
 
-      {/* Image Description */}
-      <View>
-        <Text></Text>
-      </View>
 
       {/* Progress Bars */}
       <View style={InfoStyles.barsContainer}>
@@ -92,6 +94,9 @@ export const Info: React.FC<{}> = (): React.JSX.Element => {
           <View key={index} style={[InfoStyles.bar, activeIndex === index && InfoStyles.activeBar]} />
         ))}
       </View>
+
+      {/* Image Description */}
+      <Text style={InfoStyles.imageDescription}>{ImageTexts[activeIndex]}</Text>
 
       {/* Next Button */}
       <TouchableOpacity style={InfoStyles.nextButton} onPress={handleNextPress}>
@@ -115,14 +120,16 @@ const InfoStyles = StyleSheet.create({
     backgroundColor: '#EFF1F3',
   },
   imageContainer: {
-    width: 300,
-    height: 200,
     overflow: 'hidden',
+    height: 500,
+    flexDirection: 'row', // Align children views in a row
+    width: '90%'
   },
   image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    flex: 1,
+    height: undefined, // Example fixed height, adjust based on your needs
+    width: undefined,
+    resizeMode: 'contain',
   },
   barsContainer: {
     flexDirection: 'row',
@@ -135,6 +142,7 @@ const InfoStyles = StyleSheet.create({
     width: 50,
     backgroundColor: '#CDD6F4',
     marginHorizontal: 5,
+    padding: 5,
   },
   activeBar: {
     backgroundColor: '#A6E3A1',
@@ -149,7 +157,15 @@ const InfoStyles = StyleSheet.create({
   nextButtonText: {
     color: '#A6E3A1',
     fontSize: 18,
+    fontFamily: 'Georgia',
     fontWeight: 'bold',
+  },
+  imageDescription: {
+    fontSize: 16,
+    color: '#1E1E2E', // Choose a color that fits your design
+    textAlign: 'center', // Center the text if desired
+    fontFamily: 'Georgia',
+    paddingHorizontal: 50, // Add some horizontal padding if the text is too close to the screen edges
   },
 });
 

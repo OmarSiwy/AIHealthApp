@@ -37,6 +37,7 @@ const TopBarStyles = StyleSheet.create({
   chatTitle: {
     color: '#F8F8F2', // Dracula theme text color
     fontSize: 20,
+    fontFamily: 'Georgia',
   },
   chatButton: {
     // Style for the touchable opacity if needed

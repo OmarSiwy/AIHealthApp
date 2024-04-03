@@ -14,6 +14,10 @@ import { PostRequests } from '@/Helper/APIHandler';
 // Voice 
 import Voice from '@react-native-voice/voice';
 import * as Speech from 'expo-speech';
+import { Audio } from "expo-av";
+
+// keyExtractor
+import { extracttext } from '@/Components/MessageBox'
 // end of imports 
 
 // Private Variables
@@ -22,6 +26,7 @@ type Message = {
   text: string;
   fromBot: boolean;
 };
+const soundObject = new Audio.Sound();
 // End of Private Variables
 
 
@@ -36,8 +41,7 @@ export const Chat: React.FC = () => {
   React.useEffect(() => {
     Voice.onSpeechError = (error) => {console.log(error)};
     Voice.onSpeechResults = (result) => {
-      if (result.value === undefined) return;
-      setRecordingData(result.value)
+      if (result.value) setRecordingData(result.value);
     };
 
     return () => {
@@ -48,6 +52,7 @@ export const Chat: React.FC = () => {
   const toggleVoiceChat = () => {
     setIsVoiceChatOn((prev) => !prev);
     Speech.stop();
+    if (isRecording) stopRecording();
   };
 
   const startRecording = async () => {
@@ -60,29 +65,40 @@ export const Chat: React.FC = () => {
     setIsRecording(false);
     await Voice.stop();
     setChat(recordingdata.join(" "));
+    sendMessage();
+  };
+
+  const EnableSound = async (Item: string) => {
+    if (Platform.OS === "ios") {
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+        });
+        await soundObject.loadAsync(require("../../public/soundFile.mp3"));
+        await soundObject.playAsync();
+      }
+
+      setInterval(() => {
+        Speech.speak(Item);
+      }, 1000);
   };
 
   // Function to deal with sending a message over
-  const sendMessage = React.useCallback(async () => {
+  const sendMessage = async () => {
     if (chat.trim().length > 0) {
-      const newMessage: Message = { id: Date.now(), text: chat, fromBot: false };
+      const chattemp = chat;
+      console.log(chattemp);
+      setChat('');
+      const newMessage: Message = { id: Date.now(), text: chattemp, fromBot: false };
       setMessages((previousMessages) => [...previousMessages, newMessage]);
 
       // API Response
-      PostRequests(newMessage.text).then((response) => {
-        const botResponse: Message = { id: Date.now(), text: response, fromBot: true };
-        setMessages((previousMessages) => [...previousMessages, botResponse]);
-        if (isVoiceChatOn) {
-          Speech.speak(botResponse.text);
-        }
-      }).catch((error) => {
-        const botResponse: Message = { id: Date.now(), text: error, fromBot: true }; 
-        setMessages((previousMessages) => [...previousMessages, botResponse]);
-      });
-
-      setChat('');
+      const response = await PostRequests(newMessage.text);
+      console.log(response);
+      const botResponse: Message = { id: Date.now(), text: response, fromBot: true };
+      setMessages((previousMessages) => [...previousMessages, botResponse]);
+      if (isVoiceChatOn && !isRecording) { await EnableSound(extracttext(response)); }
     }
-  }, [chat]);
+  };
 
   const renderItem = ({ item }: ListRenderItemInfo<Message>) => (
     <MessageBox message={item.text} fromBot={item.fromBot} />

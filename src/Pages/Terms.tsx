@@ -25,15 +25,19 @@ export const Terms: React.FC<{}> = (): React.JSX.Element => {
     });
   };
 
+  const handlePress = () => {
+    navigation.navigate("Chat");
+  };
+
   // Runs Only Once 
   React.useEffect(() => {
-    CheckVisit("TermsVisited").then((visited) => {
+    /*CheckVisit("TermsVisited").then((visited) => {
       if (visited) {
-        navigation.navigate("Login");
+        navigation.navigate("Chat");
       }
     }).catch(() => {
       console.error("Error Checking Visit");
-    });
+    });*/
   }, []);
 
   return(
@@ -64,7 +68,7 @@ export const Terms: React.FC<{}> = (): React.JSX.Element => {
           </Text>
 
           {/* Accept Button */}
-          <TouchableOpacity onPress={() => handleVisit("TermsVisited")} style={TermStyles.acceptButton}>
+          <TouchableOpacity onPress={handlePress} style={TermStyles.acceptButton}>
             <Text style={TermStyles.acceptButtonText}>I Understand and Accept</Text>
           </TouchableOpacity>
         </View>

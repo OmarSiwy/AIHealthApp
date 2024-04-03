@@ -1,6 +1,6 @@
 // imports
 import React from 'react';
-import { SafeAreaView, Image, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { Image, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView, Platform, View } from 'react-native';
 
 // Navigation
 import { useNavigation } from '@react-navigation/native';
@@ -28,17 +28,17 @@ export const Login: React.FC<{}> = (): React.JSX.Element => {
   const [message, setMessage] = React.useState<string>('');
 
   // Login/Signup Functions
-  const handleLogin = (): void => {
-    supabase.auth.signInWithPassword({ email, password }).then((response) => {
+  const handleLogin = async () => {
+    await supabase.auth.signInWithPassword({ email, password }).then((response) => {
       if (response.error) { setMessage(response.error.message); return; }
       setMessage('Logged in successfully!');
-      navigation.navigate("Chat");
+      navigation.navigate("Info");
     });
   };
 
-  const handleSignup = (): void => {
-    supabase.auth.signUp({ email, password }).then((response) => {
-      if (response.error) { setMessage(response.error.message); return; }
+  const handleSignup = async () => {
+    await supabase.auth.signUp({ email, password }).then((response) => {
+      if (response.error) setMessage(response.error.message);
       setMessage('Check Your Email to Verify Account');
     });
   };
@@ -47,20 +47,21 @@ export const Login: React.FC<{}> = (): React.JSX.Element => {
   React.useEffect(() => {
     // Checks if User is Already Logged In
     supabase.auth.getSession().then((response) => {
-      if (response.error) { return; }
-      navigation.navigate("Chat");
+      console.log(response); // Add this line to log the response
+      if (response.data.session) {
+        navigation.navigate("Chat");
+      }
     });
   }, []);
 
   return(
-    <SafeAreaView style={LoginStyles.container}>
+    <View style={LoginStyles.container}>
       <Image
         source={require('../../public/Logo.png')}
         style={{ width: 200, height: 200 }}
       />
       <Text style={LoginStyles.title}>Login</Text>
       <KeyboardAvoidingView
-            style={LoginStyles.KeyboardContainer}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
           >
@@ -82,42 +83,42 @@ export const Login: React.FC<{}> = (): React.JSX.Element => {
           secureTextEntry
           keyboardAppearance="dark"
         />
-      </KeyboardAvoidingView>
       <Button title="Sign Up" onPress={handleSignup} color="#ff79c6" />
       <Button title="Login" onPress={handleLogin} color="#ff79c6" />
       {message && <Text style={LoginStyles.message}>{message}</Text>}
-    </SafeAreaView>
+    </KeyboardAvoidingView>
+    </View>
   );
 };
+
 
 const LoginStyles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'center', // Center content vertically in the container
+    alignItems: 'center', // Center content horizontally in the container
     backgroundColor: '#282a36',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#f8f8f2',
-    marginBottom: 20,
+    marginBottom: 20, // Adds some space below the title
   },
   input: {
-    height: 40,
-    margin: 12,
+    height: 40, // Fixed height for the inputs
+    width: '80%', // Width relative to the container size
+    minWidth: 200, // Minimum width for the inputs
+    margin: 12, // Adds some space outside the borders of the input box
     borderWidth: 1,
-    padding: 10,
+    padding: 10, // Padding inside the input box, making text not stick to the borders
     color: '#f8f8f2',
     borderColor: '#6272a4',
-    width: '80%',
+    borderRadius: 5, // Optional: Adds rounded corners to your input boxes
   },
   message: {
     color: '#50fa7b',
-    marginTop: 20,
-  },
-  KeyboardContainer: {
-    flex: 1,
-    backgroundColor: '#282a36', // Dracula background color
+    marginTop: 20, // Adds some space above the message text
   },
 });
+

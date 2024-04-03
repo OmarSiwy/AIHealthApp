@@ -39,6 +39,12 @@ export const extractContent = (message: string): ContentPart[] => {
   return parts;
 };
 
+export const extracttext = (message: string): string => {
+  const parts: ContentPart[] = extractContent(message);
+  const textParts = parts.filter(part => part.type === 'text').map(part => part.content).join(' ');
+  return textParts;
+};
+
 type MessageProps = {
   message: string;
   fromBot: boolean;
@@ -80,17 +86,18 @@ export default MessageBox;
 const MessageStyles = StyleSheet.create({
   messageContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Align items to the start to handle different heights properly
     margin: 10,
     padding: 10,
     backgroundColor: '#44475a', // Dracula selection color, for the message background
     borderRadius: 10, // Rounded corners for the message box
     borderWidth: 1,
     borderColor: '#6272a4', // Dracula comment color, for a subtle border
+    maxWidth: '90%', // Limit the maximum width to prevent going off the screen
   },
   messageContent: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flex: 1, // Take up available space, respecting maxWidth of the container
+    flexDirection: 'column', // Stack content vertically
   },
   profilePic: {
     width: 50,
@@ -101,15 +108,19 @@ const MessageStyles = StyleSheet.create({
   messageText: {
     fontSize: 16,
     color: '#f8f8f2', // Dracula foreground color, for the text
+    flexShrink: 1, // Allow text to shrink and wrap
+    fontFamily: 'Garamond'
   },
   messageImage: {
     width: 100,
     height: 100,
     borderRadius: 10,
-    marginRight: 10,
+    marginTop: 5, // Add some space above images if they are not the first element
   },
   linkText: {
     color: '#8be9fd', // Dracula cyan, for links to make them stand out
     textDecorationLine: 'underline',
+    fontFamily: 'Georgia',
   },
 });
+
