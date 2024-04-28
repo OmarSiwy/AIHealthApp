@@ -18,6 +18,7 @@ Your privacy is our utmost priority. With AIHealthApp, rest assured that your da
 
 ## Getting Started
 [No way to install because its expensive to keep up, so development with your own keys is the only way]
+
 To get started with AIHealthApp, follow these simple steps:
 
 1. **Clone the repository**:
