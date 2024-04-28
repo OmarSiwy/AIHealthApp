@@ -1,4 +1,4 @@
-# AIHealthApp
+# AIHealthApp [No way to install because its expensive to keep up]
 
 AIHealthApp is a cutting-edge health application designed to provide highly accurate health information to users by leveraging advanced artificial intelligence (AI) technologies. By integrating Microsoft AI with other sophisticated AI services, the app can summarize and respond to user inquiries with remarkable precision.
 
